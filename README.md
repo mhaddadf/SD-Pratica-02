@@ -1,1 +1,1 @@
-# SD-Pratica-02
+# Projeto para o segundo trabalho de SD
