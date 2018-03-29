@@ -33,24 +33,24 @@ class baseClass {
 	
 		try {
 		//Conecta ao banco
-		$this->conn = mysql_connect($this->db_server, $this->db_user, $this->db_pass);
+		$this->conn = mysqli_connect($this->db_server, $this->db_user, $this->db_pass);
 		
 		if (!$this->conn)
 		{
-			throw new Exception('MySQL Connection Database Error: ' . mysql_error());
+			throw new Exception('MySQL Connection Database Error: ' . mysqli_error($this->conn));
 		}
 		
 		
 		//Seleciona o banco de dados desejado
-		mysql_select_db($this->db_database,$this->conn);
-		mysql_set_charset('utf8',$this->conn);
+		mysqli_select_db($this->conn,$this->db_database) or die(mysqli_error($this->conn));
+		mysqli_set_charset($this->conn,'utf8');
 		
 		} catch (Exception $e) {
 		
 
 			die (json_encode(array(
 				"success" => false,
-				"msg" => utf8_encode('Connection Database Error: '. mysql_error())
+				"msg" => utf8_encode('Connection Database Error: '. mysqli_error($this->conn))
 			)));
 		
 		
@@ -70,7 +70,7 @@ class baseClass {
 	****/
 
 	public function _fetch($query){
-		$row = mysql_fetch_assoc($query);
+		$row = mysqli_fetch_assoc($query);
 		return $row;
 	}
 
@@ -86,7 +86,7 @@ class baseClass {
 	}
 
 	public function _select($sql){
-		$result = mysql_query($sql,$this->conn);
+		$result = mysqli_query($this->conn,$sql);
 		return $result;
 	}
 
@@ -96,7 +96,7 @@ class baseClass {
 
 	public function _fetch_all($query){
 		$rows = array();
-		while ($row = mysql_fetch_object($query)) {
+		while ($row = mysqli_fetch_object($query)) {
 			$rows[] = $row;
 		}
 		return $rows;
@@ -106,7 +106,7 @@ class baseClass {
 	public function inicia_transacao(){
 	
 		$sql = "START TRANSACTION"; 
-		$resultado = mysql_query($sql); 
+		$resultado = mysqli_query($sql); 
 		
 		return $resultado;
 		
@@ -114,7 +114,7 @@ class baseClass {
 	
 	public function rollback(){
 		$sql = "ROLLBACK"; 
-		$resultado = mysql_query($sql); 
+		$resultado = mysqli_query($sql); 
 		
 		return $resultado; 
 	}
@@ -122,7 +122,7 @@ class baseClass {
 	public function commit(){
 	
 		$sql = "COMMIT"; 
-		$resultado = mysql_query($sql); 
+		$resultado = mysqli_query($sql); 
 		
 		return $resultado; 
 	}

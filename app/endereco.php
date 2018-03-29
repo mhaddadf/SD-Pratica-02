@@ -16,7 +16,7 @@ class endereco extends baseClass {
 
         $data = (object) $_GET;
 
-        $term = mysql_real_escape_string($data->term);
+        $term = mysqli_real_escape_string($this->conn,$data->term);
 
         $sql =
         "
