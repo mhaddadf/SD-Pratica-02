@@ -22,10 +22,10 @@ class endereco extends baseClass {
         "
         SELECT
         tb3.endereco_codigo as id,
-        concat('Cep: ', ifnull(tb3.endereco_cep,tb1.cidade_cep) ,' | Cidade: ', tb1.cidade_descricao, ' | Bairro: ', ifnull(tb2.bairro_descricao,'Centro'), ' | Logradouro: ', ifnull(tb3.endereco_logradouro,'Centro')) as label,
+        concat('Cep: ', ifnull(tb3.endereco_cep,tb1.cidade_cep) ,' | Cidade: ', tb1.cidade_descricao, ' | Bairro: ', ifnull(tb2.bairro_descricao,'Centro'), ' | Logradouro: ', ifnull(tb3.endereco_logradouro,'')) as label,
         tb1.cidade_descricao as cidade,
         ifnull(tb2.bairro_descricao,'Centro') as bairro,
-        ifnull(tb3.endereco_logradouro,'Centro') as logradouro,
+        ifnull(tb3.endereco_logradouro,'') as logradouro,
         ifnull(tb3.endereco_cep,tb1.cidade_cep) as value
         from
         cep.cidade tb1
@@ -35,11 +35,12 @@ class endereco extends baseClass {
         left JOIN
         cep.endereco tb3
         on tb2.bairro_codigo = tb3.bairro_codigo
-        where (ifnull(tb3.endereco_cep,tb1.cidade_cep) like '%$term%')
+        where (ifnull(tb3.endereco_cep,tb1.cidade_cep) like '%$term%') or (tb1.cidade_descricao like '%$term%')
         order by
         tb1.cidade_descricao,
         tb2.bairro_descricao,
         tb3.endereco_logradouro
+        limit 10
         ";
 
         $result = $this->_select_fetch_all($sql);
